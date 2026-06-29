@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { Oswald } from "next/font/google";
+import { motion, type Variants } from "framer-motion";
 import "./workflow.css";
 
 const oswald = Oswald({
@@ -8,10 +11,30 @@ const oswald = Oswald({
   variable: "--font-oswald",
 });
 
-export const metadata = {
-  title: "Workflow — Миша Калинский",
-  description: "От брифа до деплоя: 7 шагов, 8 инструментов",
+/* Scandinavian motion: restrained, smooth deceleration (easeOutExpo) */
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const maskUp: Variants = {
+  hidden: { y: "110%" },
+  show: { y: "0%", transition: { duration: 0.9, ease } },
 };
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
+};
+
+const slideIn: Variants = {
+  hidden: { opacity: 0, x: -28 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease } },
+};
+
+const stagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+};
+
+const viewport = { once: true, margin: "-60px" } as const;
 
 const tools = [
   {
@@ -163,88 +186,148 @@ const installItems = [
   },
 ];
 
+function SectionHead({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <motion.div initial="hidden" whileInView="show" viewport={viewport} variants={stagger}>
+      <motion.div className="section-eyebrow" variants={fadeUp}>
+        {eyebrow}
+      </motion.div>
+      <div className="section-title-mask">
+        <motion.div className="section-title" variants={maskUp}>
+          {title}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function WorkflowPage() {
   return (
     <div className={`wf ${oswald.variable}`}>
-      <nav>
+      <motion.nav
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease }}
+      >
         <span className="nav-author">Миша Калинский</span>
         <div className="nav-links">
           <a href="#tools" className="nav-link">Инструменты</a>
           <a href="#steps" className="nav-link">Шаги</a>
           <a href="#install" className="nav-link">С чего начать</a>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* COVER */}
       <section id="cover">
-        <div className="cover-photo-block">
-          <Image
-            src="/misha-photo.jpg"
-            alt="Миша Калинский"
-            width={300}
-            height={300}
-            className="cover-photo"
-            priority
-          />
+        <motion.div
+          className="cover-photo-block"
+          initial="hidden"
+          animate="show"
+          variants={stagger}
+        >
+          <motion.div variants={fadeUp} style={{ overflow: "hidden" }}>
+            <motion.div
+              initial={{ scale: 1.2 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 1.2, ease }}
+            >
+              <Image
+                src="/misha-photo.jpg"
+                alt="Миша Калинский"
+                width={300}
+                height={300}
+                className="cover-photo"
+                priority
+              />
+            </motion.div>
+          </motion.div>
           <div className="cover-name-block">
             <div className="cover-name">
-              Миша<br />Калинский
+              <span className="line-mask">
+                <motion.span className="line-inner" variants={maskUp}>Миша</motion.span>
+              </span>
+              <span className="line-mask">
+                <motion.span className="line-inner" variants={maskUp}>Калинский</motion.span>
+              </span>
             </div>
-            <div className="cover-role">Дизайн · Разработка · Брендинг</div>
+            <motion.div className="cover-role" variants={fadeUp}>
+              Дизайн · Разработка · Брендинг
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         <div
-          className="cover-h1"
-          style={{
-            fontSize: "clamp(36px, 7vw, 80px)",
-            padding: "0 0 clamp(16px,3vw,32px) 0",
-            borderTop: "1px solid #333",
-            paddingTop: "clamp(16px,3vw,32px)",
-          }}
+          className="cover-h1-mask"
+          style={{ borderTop: "1px solid #333", paddingTop: "clamp(16px,3vw,32px)" }}
         >
-          От брифа до деплоя
+          <motion.div
+            className="cover-h1"
+            style={{
+              fontSize: "clamp(36px, 7vw, 80px)",
+              padding: "0 0 clamp(16px,3vw,32px) 0",
+            }}
+            initial={{ y: "110%" }}
+            animate={{ y: "0%" }}
+            transition={{ duration: 1, ease, delay: 0.25 }}
+          >
+            От брифа до деплоя
+          </motion.div>
         </div>
 
-        <div>
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={stagger}
+          transition={{ delayChildren: 0.5 }}
+        >
           <div className="cover-meta">
-            <div className="cover-meta-item">
+            <motion.div className="cover-meta-item" variants={fadeUp}>
               <div className="cover-meta-label">Шагов</div>
               <div className="cover-meta-val">7</div>
-            </div>
-            <div className="cover-meta-item">
+            </motion.div>
+            <motion.div className="cover-meta-item" variants={fadeUp}>
               <div className="cover-meta-label">Инструментов</div>
               <div className="cover-meta-val">8</div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* TOOLS */}
       <section className="section" id="tools">
-        <div className="section-eyebrow">01 / инструменты</div>
-        <div className="section-title">Что и зачем</div>
-        <div className="tools-grid">
+        <SectionHead eyebrow="01 / инструменты" title="Что и зачем" />
+        <motion.div
+          className="tools-grid"
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          variants={stagger}
+        >
           {tools.map((t) => (
-            <div key={t.name} className="tool-card">
+            <motion.div key={t.name} className="tool-card" variants={fadeUp}>
               <div className="tool-name">{t.name}</div>
               <div className="tool-what">{t.what}</div>
               <div className="tool-how">{t.how}</div>
               <div className={`tool-status ${t.status === "ready" ? "status-ready" : "status-need"}`}>
                 {t.statusText}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* STEPS */}
       <section className="section" id="steps">
-        <div className="section-eyebrow">02 / процесс</div>
-        <div className="section-title">6 шагов</div>
-        <div className="steps-list">
+        <SectionHead eyebrow="02 / процесс" title="7 шагов" />
+        <motion.div
+          className="steps-list"
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          variants={stagger}
+        >
           {steps.map((s) => (
-            <div key={s.num} className="step-row">
+            <motion.div key={s.num} className="step-row" variants={slideIn}>
               <div className="step-num">{s.num}</div>
               <div className="step-body">
                 <div className="step-badge">{s.badge}</div>
@@ -256,25 +339,62 @@ export default function WorkflowPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* INSTALL */}
       <section className="section" id="install" style={{ borderBottom: "none" }}>
-        <div className="section-eyebrow">03 / с чего начать</div>
-        <div className="section-title">Что установить прямо сейчас</div>
-        <div className="install-list">
+        <SectionHead eyebrow="03 / с чего начать" title="Что установить прямо сейчас" />
+        <motion.div
+          className="install-list"
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          variants={stagger}
+        >
           {installItems.map((item) => (
-            <div key={item.name} className="install-row">
+            <motion.div key={item.name} className="install-row" variants={fadeUp}>
               <div className="install-name">{item.name}</div>
               <div className="install-desc">{item.desc}</div>
               <div className="install-status">{item.order}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
+
+      {/* FOOTER */}
+      <footer>
+        <motion.div
+          className="footer-inner"
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          variants={stagger}
+        >
+          <motion.div className="footer-author" variants={fadeUp}>
+            Миша Калинский
+            <span className="footer-tagline">Дизайн · Разработка · Брендинг</span>
+          </motion.div>
+          <motion.a
+            className="footer-tg"
+            href="https://t.me/mishegface"
+            target="_blank"
+            rel="noopener noreferrer"
+            variants={fadeUp}
+            whileHover={{ x: 6 }}
+            transition={{ duration: 0.3, ease }}
+          >
+            <span className="footer-tg-label">Telegram</span>
+            <span className="footer-tg-handle">@mishegface →</span>
+          </motion.a>
+        </motion.div>
+        <div className="footer-base">
+          <span>© {new Date().getFullYear()}</span>
+          <span className="mono">От брифа до деплоя</span>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -68,12 +68,27 @@
 
 /* COVER */
 .wf #cover {
+  position: relative;
+  isolation: isolate;
   min-height: 85vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: var(--pad);
   border-bottom: 3px solid #fff;
+}
+.wf .smoke-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+.wf #cover > *:not(.smoke-canvas) {
+  position: relative;
+  z-index: 1;
 }
 .wf .cover-photo-block {
   display: flex;

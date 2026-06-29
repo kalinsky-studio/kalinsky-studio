@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Oswald } from "next/font/google";
 import { motion, type Variants } from "framer-motion";
+import SmokeBackground from "./smoke-background";
 import "./workflow.css";
 
 const oswald = Oswald({
@@ -219,6 +220,7 @@ export default function WorkflowPage() {
 
       {/* COVER */}
       <section id="cover">
+        <SmokeBackground />
         <motion.div
           className="cover-photo-block"
           initial="hidden"

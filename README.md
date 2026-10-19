@@ -1,3 +1,15 @@
+# Kalinsky Studio
+
+Studio website and shared operating context.
+
+## Design protocol
+
+The canonical design principles for all studio and client work are documented in [`docs/design-principles.md`](docs/design-principles.md).
+
+They govern identity, brandbooks, interfaces, websites, presentations, print, content systems, and other designed outputs. Client-specific rules and assets remain in separate brand repositories.
+
+## Development
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
